@@ -1,19 +1,18 @@
 import Link from 'next/link';
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
-export async function getServerSideProps({query}) {
-    const { username } = query;
+export async function getServerSideProps({ query }) {
+  const { username } = query;
 
-    return {
-      props: {
-        username,
-        authorization: process.env.API_TOKEN,
-      },
-    };
+  return {
+    props: {
+      username
+    }
+  };
 }
 
-function UserPage({ username, authorization }) {
+
+function UserPage({ username }) {
 
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -21,9 +20,9 @@ function UserPage({ username, authorization }) {
   useEffect(() => {
 
         async function fetchData() {
-            const req = await fetch(`http://localhost:8080/api/${username}`,{
-                headers: { authorization },
-            });
+            const req = await fetch(
+                `/api/singleUser?username=${username}`
+            );
             const reqData = await req.json();
 
             setLoading(false);
@@ -46,14 +45,14 @@ function UserPage({ username, authorization }) {
   );
 }
 
-export default UserPage;
-
-function UserData({user}) {
-    return (
+function UserData({ user }) {
+  return (
     <div>
       <p>User Primary Key: {user.id}</p>
       <p>User Name: {user.username}</p>
       <p>User Email: {user.email}</p>
     </div>
-    );
+  );
 }
+
+export default UserPage;
